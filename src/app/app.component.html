@@ -1,42 +1,21 @@
-<h5>Programmatic</h5>
-<div class="p-py-3">
-  <p-button
-    [icon]="activeState[0] ? 'pi pi-minus' : 'pi pi-plus'"
-    (click)="toggle(0)"
-    styleClass="p-button-text"
-    label="Toggle 1st"
-  ></p-button>
-  <p-button
-    [icon]="activeState[1] ? 'pi pi-minus' : 'pi pi-plus'"
-    (click)="toggle(1)"
-    styleClass="p-button-text p-ml-2"
-    label="Toggle 2st"
-  ></p-button>
-  <p-button
-    [icon]="activeState[2] ? 'pi pi-minus' : 'pi pi-plus'"
-    (click)="toggle(2)"
-    styleClass="p-button-text p-ml-2"
-    label="Toggle 3st"
-  ></p-button>
-</div>
-<p>
+<h5>Prime Accordion - Programado</h5>
+
 <input
     type = "text"
     [(ngModel)] = "campoPesquisa"
-    (change)="filtrar(campoPesquisa)"
-    placeholder = "Digite aqui"
+    placeholder = "Número da Proposta"
 />
-{{campoPesquisa}}
-</p>
+<button (click)="filtrar(campoPesquisa)">Pesquisar!</button>
+<button (click)="limpar()">Limpar!</button>
+
+<br /><br /><br /><br />
 <p-accordion [multiple]="true">
   <p-accordionTab
-    *ngFor="let linhaCredito of listaLinhas.linha; index as i;"
+    *ngFor="let linhaCredito of listaPropostasPorLinhaFiltrada.linha; index as i;"
     [(selected)]="linhaCredito.abreFecha"
     header="{{ linhaCredito.nome }}"
   >
-  <p>  {{ linhaCredito.propostas[0].proposta }} </p>
-  <p>  {{ linhaCredito.propostas[0].proponente }} </p>
-  <p>  {{ linhaCredito.abreFecha }} </p>
-  <p>  {{ indice }} </p>
+  <p> Número da Proposta:  {{ linhaCredito.propostas[0].proposta }} </p>
+  <p> Nome do Cliente:  {{ linhaCredito.propostas[0].proponente }} </p>
   </p-accordionTab>
 </p-accordion>

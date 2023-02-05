@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -6,36 +6,41 @@ import { MessageService } from 'primeng/api';
   templateUrl: './app.component.html',
   providers: [MessageService],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   activeState: boolean[] = [true, false, false];
 
   indice: number = 0;
+  listaPropostasPorLinhaFiltrada: any = [];
 
-  listaLinhas = {
+  listaPropostasPorLinha = {
     linha: [
       {
         nome: 'Linha 1',
         numero: '777',
         abreFecha: false,
-        propostas: [{ proposta: '11111', proponente: 'Nome 1' }],
+        propostas: [{ proposta: '111.222.333', proponente: 'Joao Paulo' }],
+        indice: 0
       },
       {
         nome: 'Linha 2',
         numero: '888',
         abreFecha: false,
-        propostas: [{ proposta: '22222', proponente: 'Nome 2' }],
+        propostas: [{ proposta: '222.333.444', proponente: 'Pedro Jose' }],
+        indice: 0
       },
       {
         nome: 'Linha 3',
         numero: '888',
         abreFecha: false,
-        propostas: [{ proposta: '33333', proponente: 'Nome 3' }],
+        propostas: [{ proposta: '333.444.555', proponente: 'Jose Pedro' }],
+        indice: 0
       },
       {
         nome: 'Linha 4',
         numero: '888',
         abreFecha: false,
-        propostas: [{ proposta: '44444', proponente: 'Nome 4' }],
+        propostas: [{ proposta: '444.555.666', proponente: 'Paulo Jose Pedro' }],
+        indice: 0
       },
     ],
   };
@@ -43,20 +48,47 @@ export class AppComponent {
   campoPesquisa = '';
 
   constructor(private messageService: MessageService) {}
+  ngOnInit(): void {
+
+    this.preencherIndice(this.listaPropostasPorLinha.linha);
+
+    this.listaPropostasPorLinhaFiltrada = Object.create(this.listaPropostasPorLinha);
+
+  }
+
+  preencherIndice (lista : any = []) {
+    lista.forEach((value: { indice: any; }, index: any) => {
+      value.indice = index;
+    });
+  }
+
+ 
 
   filtrar(palavraChave: string) {
-    if (palavraChave) {
-      console.log('Passei aqui! ', palavraChave);
+    if (palavraChave) { 
 
       palavraChave = palavraChave.toUpperCase();
-      this.listaLinhas.linha = this.listaLinhas.linha.filter((a) =>
-         a.propostas[0].proponente.toUpperCase().indexOf(palavraChave) >= 0
+      this.listaPropostasPorLinhaFiltrada.linha = this.listaPropostasPorLinhaFiltrada.linha.filter((a: { propostas: { proposta: string; }[]; }) =>
+         a.propostas[0].proposta.toUpperCase().indexOf(palavraChave) >= 0
       );
-      this.listaLinhas.linha[0].abreFecha = true
+
+      if (this.listaPropostasPorLinhaFiltrada.linha.length === 0) {
+        this.listaPropostasPorLinhaFiltrada = Object.create(this.listaPropostasPorLinha);
+      } else {
+        // Abre o acordion do filtro, de acordo com o indice
+        this.listaPropostasPorLinhaFiltrada.linha.forEach((linha: { abreFecha: boolean; }) => {
+          linha.abreFecha = true;
+        });
+      }
     }
   }
 
-  onTabClose(event) {
+  limpar() {
+    this.listaPropostasPorLinhaFiltrada = Object.create(this.listaPropostasPorLinha);
+    this.campoPesquisa = '';
+  }
+
+  onTabClose(event: { index: string; }) {
     this.messageService.add({
       severity: 'info',
       summary: 'Tab Closed',
@@ -64,7 +96,7 @@ export class AppComponent {
     });
   }
 
-  onTabOpen(event) {
+  onTabOpen(event: { index: string; }) {
     this.messageService.add({
       severity: 'info',
       summary: 'Tab Expanded',
